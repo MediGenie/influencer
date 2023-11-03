@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Chatbot</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <div>
+        <select id="voices">
+            {% for name, id in voices.items() %}
+                <option value="{{ id }}">{{ name }}</option>
+            {% endfor %}
+        </select>
+        <select id="languages">
+            {% for name, code in languages.items() %}
+                <option value="{{ code }}">{{ name }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div id="chat"></div>
+    <input type="text" id="user_input">
+    <button onclick="sendMessage()">Send</button>
+
+    <script>
+        function sendMessage() {
+            const user_input = document.getElementById('user_input').value;
+            const selected_voice = document.getElementById('voices').value;
+            const selected_language = document.getElementById('languages').value;
+
+            $.ajax({
+                url: '/chat',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({
+                    user_input: user_input,
+                    selected_voice: selected_voice,
+                    selected_language: selected_language
+                }),
+                success: function(response) {
+                    const chat = document.getElementById('chat');
+                    const user_message = document.createElement('div');
+                    user_message.textContent = 'You: ' + user_input;
+                    chat.appendChild(user_message);
+
+                    const bot_message = document.createElement('div');
+                    bot_message.textContent = 'Bot: ' + response.text;
+                    chat.appendChild(bot_message);
+
+                    const audio = new Audio('data:audio/mpeg;base64,' + response.audio);
+                    audio.play();
+                },
+                error: function(error) {
+                    console.log(error);
+                }
+            });
+        }
+    </script>
+</body>
+</html>
