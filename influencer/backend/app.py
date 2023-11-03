@@ -52,7 +52,7 @@ def generate_audio(text, voice_id):
         "xi-api-key": app.config['API_KEY_AUDIO'],
         "Content-Type": "application/json",
     }
-    params = {"optimize_streaming_latency": 0}
+    params = {"optimize_streaming_latency": 1}
     data = {
         "text": text,
         "model_id": "eleven_multilingual_v2",
