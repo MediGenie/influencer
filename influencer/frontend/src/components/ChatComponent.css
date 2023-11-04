@@ -1,207 +1,73 @@
-@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
-
-html, body {
-  height: 100%;
-  margin: 0;
-  background: #2b2f33; /* Updated dark background for the whole page */
-  color: #f8f8f8; /* Updated light text for the whole page */
-  font-family: 'Roboto', sans-serif;
-}
-
 .chat-container {
-  display: flex;
-  flex-direction: column;
-  height: 100vh;
-  width: 100vw;
-  margin: 0;
-  box-shadow: none;
-  border-radius: 0;
-  overflow: hidden;
-}
-
-/* Configuration bar styling */
-.chat-config {
-  padding: 15px;
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-  background: #333740; /* Slightly lighter shade for the bar */
-  color: #f8f8f8;
-  border-bottom: 2px solid #3d4148;
-}
-
-/* Dropdowns styling */
-select {
-  padding: 10px 20px;
-  margin: 0 10px;
-  border-radius: 20px;
-  border: 2px solid #4b5058; /* Updated border color */
-  background-color: #41474d; /* Updated dropdown background color */
-  color: #f8f8f8; /* Maintained light text color for readability */
-  font-size: 1rem;
-  cursor: pointer;
-  outline: none;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  appearance: none;
-}
-
-/* Add a custom arrow indicator */
-select:after {
-  content: '▼';
-  position: absolute;
-  right: 10px;
-  top: 50%;
-  pointer-events: none;
-  color: #f8f8f8;
-  transform: translateY(-50%);
-}
-
-/* Hover and focus styles */
-select:hover,
-select:focus {
-  border-color: #5561ff; /* Updated highlight color on hover/focus */
-  background-color: #4b525c; /* Updated background on hover/focus */
-}
-
-/* Messages container styling */
-.chat-messages {
-  flex-grow: 1;
-  overflow-y: auto;
-  height: 400px;
-  padding: 15px;
-  background: #24282c; /* Updated darker background for contrast */
-  color: #e0e0e0;
-}
-
-/* Message bubble styling */
-.message {
-  max-width: 80%;
-  margin: 5px 0;
-  padding: 10px 15px;
-  border-radius: 18px;
-  box-shadow: 0 2px 2px rgba(0, 0, 0, 0.2);
-}
-
-/* User message styling */
-.message.user {
-  align-self: flex-end;
-  background-color: #1d7a34; /* Updated to a darker green for better contrast */
-  color: #e0e0e0;
-}
-
-/* Bot message styling */
-.message.bot {
-  align-self: flex-start;
-  background-color: #374140; /* Updated for a warmer hue */
-  color: #e0e0e0;
-}
-
-/* Input area styling */
-
-.chat-input {
-  display: flex; /* Set to flex to align children inline */
-  gap: 10px; /* This will add space between your textarea and button */
-  padding: 10px; /* Add padding to the chat-input container if needed */
-}
-
-
-.chat-input textarea {
-  flex-grow: 1; /* This will allow the textarea to fill the available space */
-  resize: none; /* Prevents the textarea from being resizable */
-  /* Other styles for the textarea */
-  border: 1px solid #ccc; /* Example border style */
-  padding: 15px; /* Example padding */
-  border-radius: 4px; /* Example border radius */
-  margin-right: 10px; /* Ensures there is a small gap between the textarea and the button */
-  overflow: hidden; /* Hide scroll bars */
-  height: 150px; /* Set a fixed height, adjust as necessary */
-}
-
-/* You can also add :focus styles to remove or change the outline when the textarea is focused */
-.chat-input textarea:focus {
-  outline: none; /* Removes the default focus outline */
-  border-color: #66afe9; /* Example focus border color */
-  /* Add more focus styles as desired */
-}
-
-.message-name {
-  font-weight: bold;
-  margin-right: 5px; /* Adjust as needed */
-  color: #ccc;
-}
-
-.message-name::after {
-  margin-left: 3px; /* Space after the name before the colon */
-  color: #ccc; /* You can change the color if needed */
-}
-
-.chat-input textarea:hover,
-.chat-input textarea:focus {
-  border-color: #5575ff; /* Updated focus color */
-}
-
-/* Send button styling */
-.chat-input button {
-  padding: 10px 20px;
-  border-radius: 20px;
-  border: none;
-  background: #5575ff; /* Updated button color */
-  color: white;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  cursor: pointer;
-  font-family: 'Roboto', sans-serif; /* Ensuring Roboto font is applied */
-}
-
-.chat-input button {
-  /* Add this if you want the button to align to the right */
-  margin-left: auto;
-  /* Other styles from previous example remain the same */
-}
-
-
-.chat-input button:hover {
-  cursor: pointer;
-  /* Add any hover effects you want, such as a change in color or background */
-  background-color: #f0f0f0; /* Example hover background color */
-}
-
-.chat-input button:disabled {
-  background: #555;
-  color: #777;
-  box-shadow: none;
-}
-
-
-/* Make the chat responsive for mobile devices */
-@media (max-width: 600px) {
-  .chat-container {
-    border-radius: 0; /* On small screens, no need for rounded corners */
+    display: flex;
+    flex-direction: column;
+    max-width: 600px;
+    margin: auto;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    overflow: hidden;
   }
   
-  .chat-config, .chat-messages, .chat-input {
-    padding: 10px; /* Smaller padding on small screens */
+  .chat-config {
+    padding: 10px;
+    background: #f5f5f5;
+    border-bottom: 1px solid #ddd;
   }
   
-  .chat-input textarea, .chat-input button {
-    font-size: 14px; /* Smaller font size for inputs and buttons on small screens */
-  }
-
   .chat-messages {
-    height: calc(100vh - 140px); /* Adjust height dynamically */
+    height: 300px;
+    overflow-y: auto;
+    padding: 10px;
+    background: #fff;
+  }
+  
+  .message {
+    margin: 10px 0;
+    padding: 5px;
+    border-radius: 10px;
+  }
+  
+  .message.user {
+    align-self: flex-end;
+    background-color: #dcf8c6;
+  }
+  
+  .message.bot {
+    align-self: flex-start;
+    background-color: #e5e5ea;
   }
   
   .message-name {
     font-weight: bold;
-    margin-right: 5px; /* Adjust as needed */
-    color: #ccc;
+    margin-right: 10px;
   }
   
-  .message-name::after {
-    content: ":"; /* This is the content that will be added */
-    margin-left: 3px; /* Space after the name before the colon */
-    color: #ccc; /* You can change the color if needed */
+  .chat-input {
+    display: flex;
+    border-top: 1px solid #ddd;
+    padding: 10px;
+    background: #f5f5f5;
   }
   
-  /* You can add more styles as needed to adjust padding, margins, and font-sizes for smaller screens */
-}
+  .chat-input textarea {
+    flex-grow: 1;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    margin-right: 10px;
+    resize: none;
+  }
+  
+  .chat-input button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    background-color: #007bff;
+    color: white;
+    cursor: pointer;
+  }
+  
+  .chat-input button:disabled {
+    background-color: #ccc;
+  }
+  

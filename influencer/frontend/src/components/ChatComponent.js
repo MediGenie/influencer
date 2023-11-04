@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './ChatComponent.css'; // Assume you have a CSS file for styles
 
+
 const ChatComponent = () => {
   const [userInput, setUserInput] = useState('');
   const [selectedVoice, setSelectedVoice] = useState('');
@@ -8,8 +9,6 @@ const ChatComponent = () => {
   const [chatMessages, setChatMessages] = useState([]);
   const [voices, setVoices] = useState([]);
   const [languages, setLanguages] = useState([]);
-  const [isSending, setIsSending] = useState(false);
-
 
   useEffect(() => {
     const fetchData = async () => {
@@ -49,35 +48,22 @@ const ChatComponent = () => {
     console.log('Languages:', languages);
   }, [voices, languages]);
 
-  const getVoiceLabel = (voiceValue) => {
-    const voice = voices.find(v => v.value === voiceValue);
-    return voice ? voice.label : 'Bot';
-  };
-  
   const sendMessage = async () => {
     if (!userInput.trim()) {
       console.log('No input to send');
       return;
     }
   
-    setIsSending(true); //
-  
-    // Add user's message to state
-    setChatMessages(prevMessages => [
-      ...prevMessages,
-      { type: 'user', name: userName, text: userInput }
-    ]);
-  
-    // Clear the user input right away
-    setUserInput('');
-  
     try {
+      // Combine user input with language code if necessary
+      // For example, 'en:Hello' if English is selected.
       const combinedInput = `${selectedLanguage}:${userInput}`;
-    
+  
+      // Prepare the request body by including the combined input
       const requestBody = {
         user_input: combinedInput,
         selected_voice: selectedVoice,
-        selected_language: selectedLanguage,
+        selected_language: selectedLanguage, // You might not need to send this separately now
       };
       
       const response = await fetch('http://127.0.0.1:5000/chat', {
@@ -87,13 +73,14 @@ const ChatComponent = () => {
         },
         body: JSON.stringify(requestBody),
       });
-  
+      
       if (response.ok) {
         const responseData = await response.json();
         
-        // Update chatMessages state with the bot's message
+        // Update chatMessages state with the user and bot messages
         setChatMessages(prevMessages => [
           ...prevMessages,
+          { type: 'user', name: userName, text: userInput },
           { type: 'bot', text: responseData.text },
         ]);
         
@@ -105,9 +92,10 @@ const ChatComponent = () => {
       }
     } catch (error) {
       console.error('An error occurred:', error);
-    } finally {
-      setIsSending(false); // Re-enable the send button whether there was an error or not
     }
+  
+    // Clear the user input after sending the message
+    setUserInput('');
   };
 
   const handleLanguageChange = (e) => {
@@ -129,40 +117,37 @@ const ChatComponent = () => {
             </option>
           ))}
         </select>
-        <select id="languages" value={selectedLanguage} onChange={(e) => setSelectedLanguage(e.target.value)}>
-          {languages.map((language, index) => (
-            <option key={index} value={language.value}>
-              {language.label}
-            </option>
-          ))}
-        </select>
+        <select id="languages" value={selectedLanguage} onChange={handleLanguageChange}>
+  {languages.map((language, index) => (
+    <option key={index} value={language.value}>
+      {language.label}
+    </option>
+  ))}
+</select>
       </div>
       <div className="chat-messages">
-        {chatMessages.map((msg, index) => (
-          <div key={index} className={`message ${msg.type}`}>
-            <span className="message-name">
-              {msg.type === 'user' ? `${userName}:` : `${getVoiceLabel(selectedVoice)}:`}
-            </span>
-            <span className="message-text">{msg.text}</span>
-          </div>
-        ))}
-      </div>
+  {chatMessages.map((msg, index) => (
+    <div key={index} className={`message ${msg.type}`}>
+      <span className="message-name">{msg.type === 'user' ? userName : 'Bot'}</span>
+      <span className="message-text">{msg.text}</span>
+    </div>
+  ))}
+</div>
       <div className="chat-input">
-      <textarea
-     value={userInput}
-     onChange={(e) => setUserInput(e.target.value)}
-     disabled={isSending}
-     onKeyDown={(e) => {
-       if (e.key === 'Enter' && !e.shiftKey) {
-         e.preventDefault();
-         sendMessage();
-       }
-     }}
-     placeholder="Type your message here..."
-  />
-  <button onClick={sendMessage} disabled={!userInput.trim() || isSending}>
-    Send
-  </button>
+        <textarea
+          value={userInput}
+          onChange={(e) => setUserInput(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' && !e.shiftKey) {
+              e.preventDefault();
+              sendMessage();
+            }
+          }}
+          placeholder="Type your message here..."
+        />
+        <button onClick={sendMessage} disabled={!userInput.trim()}>
+          Send
+        </button>
       </div>
     </div>
   );
