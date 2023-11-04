@@ -11,12 +11,14 @@ const ChatComponent = () => {
   const [isSending, setIsSending] = useState(false);
   const [selectedIdPair, setSelectedIdPair] = useState({});
   const [idPairs, setIdPairs] = useState([]); // State to hold the list of ID pairs
+  const serverBaseUrl = 'http://3.35.238.210:5000';
+
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         console.log('Fetching config data from server...');
-        const response = await fetch('http://127.0.0.1:5000/config');
+        const response = await fetch(`${serverBaseUrl}/config`);
         if (response.ok) {
           const data = await response.json();
           const voiceEntries = Object.entries(data.voices).map(([label, value]) => ({ label, value }));
@@ -104,7 +106,7 @@ const ChatComponent = () => {
         },
       };
 
-      const response = await fetch('http://127.0.0.1:5000/chat', {
+      const response = await fetch(`${serverBaseUrl}/chat`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

@@ -8,7 +8,7 @@ import traceback
 
 
 app = Flask(__name__)
-CORS(app, resources={r"/*": {"origins": "http://localhost:3000"}})
+CORS(app, resources={r"/*": {"origins": "http://3.35.238.210:3000"}})
 
 # Configuration settings moved to a separate file (config.json)
 with open("config.json", encoding='utf-8') as f:
@@ -80,7 +80,8 @@ def generate_audio(text, voice_id):
 
 @app.after_request
 def after_request(response):
-    response.headers.add('Access-Control-Allow-Origin', 'http://localhost:3000')
+    # Update the 'Access-Control-Allow-Origin' to match your AWS server IP
+    response.headers.add('Access-Control-Allow-Origin', 'http://3.35.238.210:3000')
     response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization')
     response.headers.add('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS')
     return response
@@ -157,3 +158,5 @@ def chat():
     
 if __name__ == '__main__':
     app.run(debug=True)
+
+
