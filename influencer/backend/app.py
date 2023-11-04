@@ -27,7 +27,7 @@ voices_dict = config['voices_dict']
 languages_dict = config['languages_dict']
 loading_messages_dict = config['loading_messages_dict']
 
-def generate_text(prompt, chat_history=None):
+def generate_text(prompt, api_url):
     headers = {
         "accept": "audio/mpeg;charset=UTF-8",
         "authorization": app.config['API_KEY_TEXT'],
@@ -38,7 +38,7 @@ def generate_text(prompt, chat_history=None):
         "prompt": prompt,
         "chatbot_model": "gpt-3.5-turbo",
     }
-    response = requests.post(app.config['API_URL_TEXT'], headers=headers, params=params, data=json.dumps(data))
+    response = requests.post(api_url, headers=headers, params=params, data=json.dumps(data))
     if response.status_code == 200:
         return response.json()["data"]["openai_response"]
     else:
@@ -99,8 +99,13 @@ def get_config():
     print("Received request for config")
     voices = config['voices_dict']
     languages = config['languages_dict']
-    print("Sending response data:", {'voices': voices, 'languages': languages})
-    return jsonify({'voices': voices, 'languages': languages})
+    id_pairs = config.get('id_pairs', {})  # Use .get to avoid KeyError if 'id_pairs' does not exist
+    print("Sending response data:", {'voices': voices, 'languages': languages, 'id_pairs': id_pairs})
+    return jsonify({
+        'voices': voices, 
+        'languages': languages,
+        'id_pairs': id_pairs  # Include the ID pairs in the response
+    })
 
 
 @app.errorhandler(Exception)
@@ -112,17 +117,29 @@ def handle_exception(e):
 # New route for handling chat interactions (POST requests from React)
 @app.route('/chat', methods=['POST'])
 def chat():
-    data = request.json  # Get the JSON data from the request
+    data = request.json
+
+    # You may directly use 'ID1' and 'ID2' from the data if you don't need to validate them
+    id1 = data.get('selected_id_pair_key', {}).get('ID1')
+    id2 = data.get('selected_id_pair_key', {}).get('ID2')
+
+    # Now we don't check if the selected_id_pair_key is in config['id_pairs']
 
     user_input = data['user_input']
     selected_voice = data['selected_voice']
     selected_language = data['selected_language']
 
+    # Format the API URL using the IDs
+    # Ensure this is the desired format for your API URL.
+    API_URL_TEXT_formatted = API_URL_TEXT.format(ID1=id1, ID2=id2)
+    print("Formatted API URL:", API_URL_TEXT_formatted)
+
     # Get the language string from the dictionary, default to empty string if not found
     language_string = config['languages_dict'].get(selected_language, "")
     user_input_with_language = f"{user_input} {language_string}"
 
-    text = generate_text(user_input_with_language)
+    # Pass the formatted API URL to the generate_text function
+    text = generate_text(user_input_with_language, API_URL_TEXT_formatted)
     audio = generate_audio(text, selected_voice)
 
     # Check if audio is not None before encoding
@@ -137,6 +154,6 @@ def chat():
     }
 
     return jsonify(response)
-
+    
 if __name__ == '__main__':
     app.run(debug=True)

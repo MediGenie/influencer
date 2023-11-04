@@ -9,7 +9,8 @@ const ChatComponent = () => {
   const [voices, setVoices] = useState([]);
   const [languages, setLanguages] = useState([]);
   const [isSending, setIsSending] = useState(false);
-
+  const [selectedIdPair, setSelectedIdPair] = useState({});
+  const [idPairs, setIdPairs] = useState([]); // State to hold the list of ID pairs
 
   useEffect(() => {
     const fetchData = async () => {
@@ -20,11 +21,23 @@ const ChatComponent = () => {
           const data = await response.json();
           const voiceEntries = Object.entries(data.voices).map(([label, value]) => ({ label, value }));
           const languageEntries = Object.entries(data.languages).map(([label, value]) => ({ label, value }));
-  
+          const idPairEntries = Object.entries(data.id_pairs).map(([label, ids]) => ({
+            label,
+            value: ids, // Here ids is an object { ID1: "xxx", ID2: "yyy" }
+          }));
+          setIdPairs(idPairEntries);
           setVoices(voiceEntries);
           setLanguages(languageEntries);
-  
+          if (idPairEntries.length > 0) {
+            setSelectedIdPair(idPairEntries[0].value);
+          }
+
+          
           // Set default selected values
+          if (idPairEntries.length > 0) {
+            setSelectedIdPair(idPairEntries[0].value);
+          }
+          
           if (voiceEntries.length > 0) {
             setSelectedVoice(voiceEntries[0].value);
           }
@@ -60,26 +73,37 @@ const ChatComponent = () => {
       return;
     }
   
-    setIsSending(true); //
+    setIsSending(true);
   
-    // Add user's message to state
     setChatMessages(prevMessages => [
       ...prevMessages,
       { type: 'user', name: userName, text: userInput }
     ]);
   
-    // Clear the user input right away
     setUserInput('');
   
     try {
       const combinedInput = `${selectedLanguage}:${userInput}`;
+      
+      // Make sure actualSelectedPair is defined from selectedIdPair state
+      const actualSelectedPair = selectedIdPair;
     
+      // Check that actualSelectedPair has the required properties
+      if (!actualSelectedPair || !actualSelectedPair.ID1 || !actualSelectedPair.ID2) {
+        console.error('Selected ID pair is invalid:', actualSelectedPair);
+        return;
+      }
+
       const requestBody = {
         user_input: combinedInput,
         selected_voice: selectedVoice,
         selected_language: selectedLanguage,
+        selected_id_pair_key: {
+          ID1: actualSelectedPair.ID1,
+          ID2: actualSelectedPair.ID2,
+        },
       };
-      
+
       const response = await fetch('http://127.0.0.1:5000/chat', {
         method: 'POST',
         headers: {
@@ -109,6 +133,11 @@ const ChatComponent = () => {
       setIsSending(false); // Re-enable the send button whether there was an error or not
     }
   };
+  const handleIdPairChange = (e) => {
+    const selectedLabel = e.target.value;
+    const selectedPair = idPairs.find(pair => pair.label === selectedLabel);
+    setSelectedIdPair(selectedPair ? selectedPair.value : null);
+  };
 
   const handleLanguageChange = (e) => {
     console.log('Language selected:', e.target.value);
@@ -122,6 +151,13 @@ const ChatComponent = () => {
   return (
     <div className="chat-container">
       <div className="chat-config">
+      <select id="idPairs" value={selectedIdPair ? selectedIdPair.label : ''} onChange={handleIdPairChange}>
+        {idPairs.map((pair, index) => (
+          <option key={index} value={pair.label}>
+            {pair.label}
+          </option>
+        ))}
+      </select>
         <select id="voices" value={selectedVoice} onChange={(e) => setSelectedVoice(e.target.value)}>
           {voices.map((voice, index) => (
             <option key={index} value={voice.value}>

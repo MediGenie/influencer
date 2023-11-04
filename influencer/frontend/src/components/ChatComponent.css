@@ -115,7 +115,7 @@ select:focus {
   border-radius: 4px; /* Example border radius */
   margin-right: 10px; /* Ensures there is a small gap between the textarea and the button */
   overflow: hidden; /* Hide scroll bars */
-  height: 150px; /* Set a fixed height, adjust as necessary */
+  height: 30px; /* Set a fixed height, adjust as necessary */
 }
 
 /* You can also add :focus styles to remove or change the outline when the textarea is focused */

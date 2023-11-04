@@ -1,0 +1,63 @@
+2023-11-04 00:19:58,583 WARNING werkzeug MainThread :  * Debugger is active!
+2023-11-04 00:19:58,593 INFO werkzeug MainThread :  * Debugger PIN: 968-519-417
+2023-11-04 00:20:19,733 INFO werkzeug MainThread :  * Detected change in 'C:\\Users\\Administrator\\Downloads\\√÷¡æªÍ√‚π∞ (1)\\√÷¡æªÍ√‚π∞\\AI_Plaza-main\\influencer\\influencer\\backend\\app.py', reloading
+2023-11-04 00:20:20,363 WARNING werkzeug MainThread :  * Debugger is active!
+2023-11-04 00:20:20,373 INFO werkzeug MainThread :  * Debugger PIN: 968-519-417
+2023-11-04 00:20:26,435 INFO werkzeug MainThread :  * Detected change in 'C:\\Users\\Administrator\\Downloads\\√÷¡æªÍ√‚π∞ (1)\\√÷¡æªÍ√‚π∞\\AI_Plaza-main\\influencer\\influencer\\backend\\app.py', reloading
+2023-11-04 00:20:27,222 WARNING werkzeug MainThread :  * Debugger is active!
+2023-11-04 00:20:27,232 INFO werkzeug MainThread :  * Debugger PIN: 968-519-417
+2023-11-04 00:20:28,293 INFO werkzeug MainThread :  * Detected change in 'C:\\Users\\Administrator\\Downloads\\√÷¡æªÍ√‚π∞ (1)\\√÷¡æªÍ√‚π∞\\AI_Plaza-main\\influencer\\influencer\\backend\\app.py', reloading
+2023-11-04 00:20:29,010 WARNING werkzeug MainThread :  * Debugger is active!
+2023-11-04 00:20:29,018 INFO werkzeug MainThread :  * Debugger PIN: 968-519-417
+2023-11-04 00:20:39,124 INFO werkzeug MainThread :  * Detected change in 'C:\\Users\\Administrator\\Downloads\\√÷¡æªÍ√‚π∞ (1)\\√÷¡æªÍ√‚π∞\\AI_Plaza-main\\influencer\\influencer\\backend\\app.py', reloading
+2023-11-04 00:20:39,971 WARNING werkzeug MainThread :  * Debugger is active!
+2023-11-04 00:20:39,980 INFO werkzeug MainThread :  * Debugger PIN: 968-519-417
+2023-11-04 00:21:04,096 INFO werkzeug MainThread :  * Detected change in 'C:\\Users\\Administrator\\Downloads\\√÷¡æªÍ√‚π∞ (1)\\√÷¡æªÍ√‚π∞\\AI_Plaza-main\\influencer\\influencer\\backend\\app.py', reloading
+2023-11-04 00:21:04,825 WARNING werkzeug MainThread :  * Debugger is active!
+2023-11-04 00:21:04,833 INFO werkzeug MainThread :  * Debugger PIN: 968-519-417
+2023-11-04 00:21:23,944 INFO werkzeug MainThread :  * Detected change in 'C:\\Users\\Administrator\\Downloads\\√÷¡æªÍ√‚π∞ (1)\\√÷¡æªÍ√‚π∞\\AI_Plaza-main\\influencer\\influencer\\backend\\app.py', reloading
+2023-11-04 00:21:24,575 WARNING werkzeug MainThread :  * Debugger is active!
+2023-11-04 00:21:24,584 INFO werkzeug MainThread :  * Debugger PIN: 968-519-417
+2023-11-04 00:21:28,343 INFO werkzeug Thread-2 (process_request_thread) : 127.0.0.1 - - [04/Nov/2023 00:21:28] "OPTIONS /chat HTTP/1.1" 200 -
+2023-11-04 00:21:28,350 DEBUG root Thread-3 (process_request_thread) : Received request data: {'user_input': '. Respond in Dutch:hey', 'selected_voice': '9aXCnmR4rc6ln10IZ2tk', 'selected_language': '. Respond in Dutch', 'selected_id_pair_key': {'ID1': '15869', 'ID2': '313732'}}
+2023-11-04 00:21:28,351 INFO werkzeug Thread-3 (process_request_thread) : 127.0.0.1 - - [04/Nov/2023 00:21:28] "[31m[1mPOST /chat HTTP/1.1[0m" 400 -
+2023-11-04 00:21:36,998 INFO werkzeug MainThread : [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2023-11-04 00:21:36,999 INFO werkzeug MainThread : [33mPress CTRL+C to quit[0m
+2023-11-04 00:21:37,006 INFO werkzeug MainThread :  * Restarting with stat
+2023-11-04 00:21:37,684 WARNING werkzeug MainThread :  * Debugger is active!
+2023-11-04 00:21:37,693 INFO werkzeug MainThread :  * Debugger PIN: 968-519-417
+2023-11-04 00:21:42,517 INFO werkzeug Thread-2 (process_request_thread) : 127.0.0.1 - - [04/Nov/2023 00:21:42] "GET /config HTTP/1.1" 200 -
+2023-11-04 00:21:46,519 INFO werkzeug Thread-3 (process_request_thread) : 127.0.0.1 - - [04/Nov/2023 00:21:46] "OPTIONS /chat HTTP/1.1" 200 -
+2023-11-04 00:21:46,525 DEBUG root Thread-4 (process_request_thread) : Received request data: {'user_input': '. Respond in Dutch:hey', 'selected_voice': '9aXCnmR4rc6ln10IZ2tk', 'selected_language': '. Respond in Dutch', 'selected_id_pair_key': {'ID1': '15869', 'ID2': '313732'}}
+2023-11-04 00:21:46,525 INFO werkzeug Thread-4 (process_request_thread) : 127.0.0.1 - - [04/Nov/2023 00:21:46] "[31m[1mPOST /chat HTTP/1.1[0m" 400 -
+2023-11-04 00:21:58,290 INFO werkzeug Thread-5 (process_request_thread) : 127.0.0.1 - - [04/Nov/2023 00:21:58] "OPTIONS /chat HTTP/1.1" 200 -
+2023-11-04 00:21:58,298 DEBUG root Thread-6 (process_request_thread) : Received request data: {'user_input': '. Respond in Japanese:hi', 'selected_voice': 'PRL1ijCrytwCNYQ8dBuI', 'selected_language': '. Respond in Japanese', 'selected_id_pair_key': {'ID1': '15869', 'ID2': '313732'}}
+2023-11-04 00:21:58,298 INFO werkzeug Thread-6 (process_request_thread) : 127.0.0.1 - - [04/Nov/2023 00:21:58] "[31m[1mPOST /chat HTTP/1.1[0m" 400 -
+2023-11-04 00:22:07,810 INFO werkzeug MainThread :  * Detected change in 'C:\\Users\\Administrator\\Downloads\\√÷¡æªÍ√‚π∞ (1)\\√÷¡æªÍ√‚π∞\\AI_Plaza-main\\influencer\\influencer\\backend\\app.py', reloading
+2023-11-04 00:22:07,856 INFO werkzeug MainThread :  * Restarting with stat
+2023-11-04 00:22:15,306 INFO werkzeug MainThread : [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2023-11-04 00:22:15,307 INFO werkzeug MainThread : [33mPress CTRL+C to quit[0m
+2023-11-04 00:22:20,558 INFO werkzeug Thread-1 (process_request_thread) : 127.0.0.1 - - [04/Nov/2023 00:22:20] "OPTIONS /chat HTTP/1.1" 200 -
+2023-11-04 00:22:20,564 DEBUG root Thread-2 (process_request_thread) : Received request data: {'user_input': '. Respond in Japanese:hey', 'selected_voice': 'PRL1ijCrytwCNYQ8dBuI', 'selected_language': '. Respond in Japanese', 'selected_id_pair_key': {'ID1': '15869', 'ID2': '313732'}}
+2023-11-04 00:22:20,564 INFO werkzeug Thread-2 (process_request_thread) : 127.0.0.1 - - [04/Nov/2023 00:22:20] "[31m[1mPOST /chat HTTP/1.1[0m" 400 -
+2023-11-04 00:22:45,128 INFO werkzeug MainThread : [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2023-11-04 00:22:45,129 INFO werkzeug MainThread : [33mPress CTRL+C to quit[0m
+2023-11-04 00:22:45,134 INFO werkzeug MainThread :  * Restarting with stat
+2023-11-04 00:22:45,729 WARNING werkzeug MainThread :  * Debugger is active!
+2023-11-04 00:22:45,736 INFO werkzeug MainThread :  * Debugger PIN: 968-519-417
+2023-11-04 00:22:58,442 INFO werkzeug Thread-2 (process_request_thread) : 127.0.0.1 - - [04/Nov/2023 00:22:58] "GET /config HTTP/1.1" 200 -
+2023-11-04 00:22:58,801 INFO werkzeug MainThread :  * Detected change in 'C:\\Users\\Administrator\\Downloads\\√÷¡æªÍ√‚π∞ (1)\\√÷¡æªÍ√‚π∞\\AI_Plaza-main\\influencer\\influencer\\backend\\app.py', reloading
+2023-11-04 00:22:58,867 INFO werkzeug MainThread :  * Restarting with stat
+2023-11-04 00:23:00,598 INFO werkzeug MainThread :  * Restarting with stat
+2023-11-04 00:23:12,596 INFO werkzeug MainThread :  * Restarting with stat
+2023-11-04 00:23:44,588 INFO werkzeug MainThread :  * Restarting with stat
+2023-11-04 00:24:07,522 INFO werkzeug MainThread :  * Restarting with stat
+2023-11-04 00:26:42,942 INFO werkzeug MainThread :  * Restarting with stat
+2023-11-04 00:27:35,982 INFO werkzeug MainThread :  * Restarting with stat
+2023-11-04 00:28:19,971 INFO werkzeug MainThread :  * Restarting with stat
+2023-11-04 00:28:40,970 INFO werkzeug MainThread :  * Restarting with stat
+2023-11-04 00:29:31,876 INFO werkzeug MainThread :  * Restarting with stat
+2023-11-04 00:29:37,849 INFO werkzeug MainThread :  * Restarting with stat
