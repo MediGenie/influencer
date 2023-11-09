@@ -4,6 +4,7 @@
   "API_URL_AUDIO": "https://api.elevenlabs.io/v1/text-to-speech/",
   "API_KEY_AUDIO": "bdb4614d39f712020be8916ceda8e1fb",
   "voices_dict": {
+    "기완": "wK4ruMC51RV2miArFeZV",
     "Howon": "uXPBWe5fTaoPl1jQFvfW",
     "정우성": "hjlaVGmIa72yfOAHbXYK",
     "금난새" : "ICXQigVUGNTpavAaHQ6i",
@@ -12,7 +13,6 @@
     "목사님": "duE75Yru8bRUrTejR3Zo",
     "카리나": "OISINXdqIoPsKzjovAY3",
     "지효": "RoZbkOINWj1i329fDdiO",
-    "기완": "wK4ruMC51RV2miArFeZV",
     "인근": "jBDKmQMWVDjyq90WikrR",
     "강수진": "9aXCnmR4rc6ln10IZ2tk",
     "병우": "24KRlryrWHcsIlRFPmW9",
@@ -23,9 +23,9 @@
     "나스티아": "PRL1ijCrytwCNYQ8dBuI"
 },
 "languages_dict" : {
+  "한국어": ". Respond in Korean",
   "영어": ". Respond in English",
   "독일어": ". Respond in German",
-  "한국어": ". Respond in Korean",
   "프랑스어": ". Respond in French",
   "일본어": ". Respond in Japanese",
   "러시아": ". Respond in Russian",

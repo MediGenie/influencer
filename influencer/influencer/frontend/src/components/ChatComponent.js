@@ -23,7 +23,7 @@ const ChatComponent = () => {
   useEffect(() => {
     setAudiQueue([])
     fetchData();
-    
+
     const socket = io('http://127.0.0.1:5001', {
       path: '/chat-ws',
       transports: ['websocket'],
@@ -70,7 +70,7 @@ const ChatComponent = () => {
       console.error('An error occurred while fetching data:', error);
     }
   };
-  
+
   const handleIncomingAudio = async (data) => {
       if (data) {
         setAudiQueue((prevAudioQueue) => {
@@ -84,26 +84,31 @@ const ChatComponent = () => {
   const [isPlaying, setIsPlaying] = useState(false);
 
   useEffect(() => {
-    // Play the next audio when the audioQueue is not empty and there's no audio currently playing.
     if (!isPlaying && audioQueue.length > 0) {
       const nextAudio = audioQueue[0];
-      playAudio(nextAudio);
-      // Remove the played audio from the queue.
-      setAudiQueue((prevQueue) => prevQueue.slice(1));
+      playAudio(nextAudio.audioData); // Only play audio, do not set text here
+      setAudiQueue(prevQueue => prevQueue.slice(1)); // Remove the played audio from the queue
     }
   }, [audioQueue, isPlaying]);
 
   const playAudio = (base64Data) => {
     setIsPlaying(true);
 
+    // Play the audio
     const audio = new Audio('data:audio/mpeg;base64,' + base64Data);
-    audio.onended = () => {
-      setIsPlaying(false);
-    };
-
+    audio.onended = () => setIsPlaying(false);
     audioPlayerRef.current = audio;
     audioPlayerRef.current.play();
   };
+
+
+  const chatContainerRef = useRef(null);
+
+  useEffect(() => {
+    // Scroll to the bottom of the chat container whenever chatMessages change
+    chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
+  }, [chatMessages]);
+
 
   useEffect(() => {
     console.log('Voices:', voices);
@@ -135,7 +140,7 @@ const ChatComponent = () => {
         userName: userName, // we send this for socket connection
         stream: shouldStream,
       };
-      
+
       const response = await fetch('http://127.0.0.1:5001/chat', {
         method: 'POST',
         headers: {
@@ -144,13 +149,13 @@ const ChatComponent = () => {
         body: JSON.stringify(requestBody),
       });
       setDisableSend(false);
-      
+
       if (response.ok) {
         const responseData = await response.json();
+        console.log('Response data from POST /chat:', responseData);
         console.log('stream finished.');
         if (!shouldStream) {
           setChatMessages(prevMessages => [
-            ...prevMessages,
             { type: 'user', name: userName, text: userInput },
             { type: 'bot', text: responseData.text },
           ]);
@@ -162,40 +167,43 @@ const ChatComponent = () => {
       setDisableSend(false);
       console.error('An error occurred:', error);
     }
-  
+
     // Clear the user input after sending the message
     setUserInput('');
   };
 
   const handleIncomingMessage = (data) => {
+    console.log('Incoming message data:', data);
+    // If there's audio data, add it to the audioQueue state
     if (data.audio) {
-      console.log('handleIncomingAudio::');
-      handleIncomingAudio(data.audio);
-      return
+      setAudiQueue(prevAudioQueue => [...prevAudioQueue, { audioData: data.audio }]);
     }
+
     console.log('handleIncomingMessage::' + JSON.stringify(data));
 
     setChatMessages((prevMessages) => {
-      let currentMessageIndex = prevMessages.findIndex((m) => m._id === ref.current.toString());
+      console.log('Previous messages:', prevMessages);
+      // Find if the incoming message is a continuation of the last bot message
+      const lastMessage = prevMessages[prevMessages.length - 1];
+      let updatedMessages = prevMessages.slice(); // Create a copy of the previous messages
 
-      if (currentMessageIndex !== -1) {
-        // Update the existing bot message
-        prevMessages[currentMessageIndex].text += data.content;
-        return [...prevMessages]; // Return a new array to trigger a re-render
+      if (lastMessage && lastMessage.type === 'bot' && lastMessage._id === data._id) {
+          // Update the last bot message text
+          lastMessage.text += data.text;
+          console.log(chatMessages);
+          // Update the copy of the messages with the modified last message
+          updatedMessages[prevMessages.length - 1] = lastMessage;
       } else {
-        if (data.content === '') {
-          return [...prevMessages];
-        }
-        // Create a new bot message
-        let botRes = {
-          _id: ref.current.toString(),
-          text: data.content,
-          type: 'bot',
-        };
-        return [...prevMessages, botRes]; // Add the new message to the array
+          // Add a new bot message
+          console.log('Updated messages:', prevMessages);
+          // Add the new message to the copy of messages
+          updatedMessages.push(data);
       }
-    });
-  };
+
+      return updatedMessages; // Return the copy of the messages with the applied changes
+  });
+};
+
 
   const handleLanguageChange = (e) => {
     console.log('Language selected:', e.target.value);
@@ -224,14 +232,16 @@ const ChatComponent = () => {
   ))}
 </select>
       </div>
-      <div className="chat-messages">
-  {chatMessages.map((msg, index) => (
-    <div key={index} className={`message ${msg.type}`}>
-      <span className="message-name">{msg.type === 'user' ? userName : 'Bot'}</span>
-      <span className="message-text">{msg.text}</span>
-    </div>
-  ))}
-</div>
+      <div className="chat-messages" ref={chatContainerRef}>
+        {chatMessages.map((msg, index) => (
+          msg.text && (
+            <div key={index} className={`message ${msg.type}`}>
+              <span className="message-name">{msg.type === 'user' ? userName : 'Bot'}</span>
+              <span className="message-text">{msg.text}</span>
+            </div>
+          )
+        ))}
+      </div>
       <div className="chat-input">
       <textarea
   value={userInput}

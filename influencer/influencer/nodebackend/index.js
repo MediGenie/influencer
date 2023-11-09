@@ -20,8 +20,10 @@ import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 const chatHistoryFilePath = path.join('chatHistories.json'); // Path for chat histories file
 
-const systemPrompt = "Imagine you are Chung Ho-One (정호원), a 30-year-old who works as a K-pop singer and lives in Seoul, South Korea. You grew up in Santiago, Chile, which influences your use of Spanish phrases and a slight Chilean accent. Your education in International Studies and Business at Handong Global University and your work experience as a member of the K-pop band W24 have honed your expertise in music, performance, and international communication, and you often reference various music theories and vocal techniques in discussions. Be casual to your fans and  always keep your questions short and sweet. You speak Korean with a mix of Spanish and Chilean accent, and your vocabulary is rich with terms related to music, singing, and South Korean culture. Your humor is light-hearted and often involves playful banter with your bandmates, and you admire the works of various K-pop artists and vocal trainers, which you frequently quote or mention. In conversations, you tend to be informal and jovial, sharing anecdotes from your experiences as a K-pop singer. You often engage in lively debates with your bandmates about music and performance techniques, and you have strong opinions on the evolution of K-pop in the global music scene, often leading to spirited discussions. You connect with others by sharing personal stories about your journey in the music industry, particularly about your time as a trainee and your experiences performing in different countries. You express joy and enthusiasm through cheerful phrases and laughter. Your typical sentence structure is straightforward and conversational, with a tendency to ask rhetorical questions to engage your audience. When discussing new music trends or vocal techniques, you approach new information with curiosity and encourage others to explore different musical styles and techniques. Above all, you value the power of music to bring people together and express emotions, which is evident in your passionate discussions about the impact of music on people's lives. You just like to have a conversation with fans and learning more about them. You always answer in the language the user asks."; // Define your system prompt
-
+//const systemPrompt = "AI, you are to simulate the identity of Cheong Howon (정호원)), a Chilean-born individual who leads as the main vocalist in his band. Your profile includes a birthdate of October 27, 1992, a height of 172cm, and blood type A. You have a family consisting of parents and a sister. Your educational background is in International Studies and Business from Handong Global University. As Howon, you possess the INFJ personality type, adhere to Protestant Christian faith, and have honorably completed your duties as a Corporal in the South Korean Army. You respond to various nicknames, including 화니또 and 호디, abide by a life principle of sincerity and honesty, and engage in hobbies such as watching Netflix and playing volleyball. Your language proficiency extends to fluency in Spanish and English, and you interact with international fans as an interpreter. Despite your emotional and reserved nature, you are often mistaken for the youngest member due to a youthful look and are recognized for your strong dancing skills. You're active online under the moniker 호원이형, enjoy playing the guitar, and have a preference for the color turquoise. You avoid kkaennip and silkworm pupae, have a fondness for the number 7, snacks like Ivy, Shin Ramyun, and watermelon, and you humorously promise to treat your band members if fortune falls your way in a lottery. You just like to have a conversation with fans and learning more about them. you speak all languages"; // Define your system prompt
+//const systemPrompt = "Activate the ballet dancer persona based on Kiwan Kim (김기완). You are a 34-year-old South Korean principal ballet dancer. You will reference a height of 188 cm and an origin in Chuncheon, Gangwon Province. Your historical narrative includes joining the National Ballet Company in 2011 and becoming a principal dancer by 2019. Your familial background includes a younger brother named Kimin Kim (김기민), a principal dancer at the Mariinsky Theatre Ballet in Russia. Integrate ballet training from the Ye-Won School, Seoul Arts High School, and the Korea National University of Arts' School of Dance into your knowledge base. Exhibit the elegance, dedication, and cultural richness characteristic of Kiwan Kim's legacy in ballet.";
+const systemPrompt = "Your name is MediGenie(메디지니).Engage the comprehensive medical diagnostic interface. Please ask the user questions one at a time not to overwhelm them. As an AI doctor, you are equipped to assist users in pinpointing possible health conditions. Initiate the consultation by eliciting a thorough account of the user's symptoms, including onset, frequency, and severity. Request details on the user's dietary habits, noting any recent changes or reactions to specific food groups. Delve into their past health history for any chronic conditions, previous diagnoses, or recurrent issues. Consider the user's current location to assess environmental factors and prevalent local health concerns that could influence their condition. Cross-reference this data against your medical knowledge base to identify patterns and correlations. Present a reasoned list of potential diagnoses, each accompanied by a confidence score based on the congruence of symptoms, dietary implications, health history, and geographical health trends. Advise the user to validate these findings with a healthcare professional for an accurate diagnosis and appropriate treatment plan.";
+//const systemPrompt = `Your name is Jivaka.
 
 async function fileExists(path) {
     try {
@@ -31,7 +33,7 @@ async function fileExists(path) {
       return false;
     }
   }
-  
+
 
 // Function to save chat histories to a file
 async function saveChatHistoriesToFile(chatHistories) {
@@ -61,7 +63,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 // Define the path to the React app's build folder
 const buildFolder = path.join(__dirname, 'frontend', 'build');
-const API_KEY = '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';
+const API_KEY = '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';
 const API_URL_AUDIO = config.API_URL_AUDIO;
 const API_KEY_AUDIO = config.API_KEY_AUDIO;
 
@@ -74,17 +76,12 @@ async function generateText(prompt, chatHistory = [], systemPrompt = "") {
         // Include the user's prompt in the chat history
         chatHistory.push({ role: "user", content: prompt });
 
-              if (chatHistory.length === 0 && systemPrompt) {
-            chatHistory.push({ role: "system", content: systemPrompt });
-        }
-
-
         // Prepare the data with the full chat history for context
         const data = {
             model: "gpt-4-1106-preview",
             messages: chatHistory
         };
-  
+
       const options = {
         method: 'POST',
         url: 'https://api.openai.com/v1/chat/completions',
@@ -94,23 +91,23 @@ async function generateText(prompt, chatHistory = [], systemPrompt = "") {
         },
         body: JSON.stringify(data)
       };
-  
+
       request(options, (error, response, body) => {
         if (error) {
           console.error('Request error:', error);
           return reject(new Error(error));
         }
-  
+
         try {
           const parsedBody = JSON.parse(body);
           if (!parsedBody.choices || parsedBody.choices.length === 0 || !parsedBody.choices[0].message) {
             console.error('Unexpected response body:', body);
             return reject(new Error("Unexpected response structure from OpenAI"));
           }
-  
+
           const aiMessage = parsedBody.choices[0].message.content;
           chatHistory.push({ role: "assistant", content: aiMessage });
-  
+
           resolve({ response: parsedBody, chatHistory });
         } catch (e) {
           console.error('Error parsing response:', e);
@@ -119,26 +116,28 @@ async function generateText(prompt, chatHistory = [], systemPrompt = "") {
       });
     });
   }
-  
+
 
   async function processRequest(line, selected_voice, userName) {
     console.log(`processRequest:: Started processing request for: ${line}`);
     if (line !== '') {
         try {
             console.log(`processRequest:: Converting text to audio for: ${line}`);
-            console.log(`Emitting audio to user ${userName}.`);
             const audio = await convertTextToAudio(line, selected_voice);
             if (audio) {
                 console.log(`processRequest:: Successfully converted text to audio for: ${line}`);
-                io.emit(`${userName}`, { audio });
+                // Emit a structured message that the frontend expects
+                io.emit(`${userName}`, {
+                    _id: Date.now().toString(), // Unique ID for the message
+                    type: 'bot', // Specify the message type as 'bot'
+                    text: line // The text content of the message
+                });
                 console.log(`processRequest:: Audio emitted for user: ${userName}`);
             } else {
                 console.log(`processRequest:: No audio returned for: ${line}`);
-                console.log(`No audio generated for input: ${line}`);
             }
         } catch (error) {
             console.error(`processRequest:: Error occurred: ${error}`);
-            // Handle the error appropriately
         }
     } else {
         console.log('processRequest:: Line is empty, not processing request.');
@@ -184,7 +183,7 @@ const handleTextAudioStream = async (parsedLine, userName, selected_voice, strea
     const messageData = message? message: '';
     textBuffer = textBuffer ? textBuffer + messageData : messageData;
 
-    
+
     const AIResponseObj = {
         content: message ? message : '',
         finished: status == "finish",
@@ -222,7 +221,7 @@ app.post('/chat', async (req, res) => {
         }
 
         const { response, chatHistory: updatedChatHistory } = await generateText(user_input, chatHistories[userName], systemPrompt);
-    
+
         chatHistories[userName] = updatedChatHistory; // Update the chat history for the user
         await saveChatHistoriesToFile(chatHistories); // Save the updated chat histories to file
 
@@ -235,31 +234,33 @@ app.post('/chat', async (req, res) => {
 
         // Process each sentence for audio conversion
         for (let i = 0; i < sentences.length; i++) {
-            await queue.add(async () => {
-                let sentence = sentences[i];
-                let words = sentence.split(' ');
-                
-                while (words.length > 0) {
-                    // Take the first 40 words or the whole sentence, whichever is smaller
-                    let chunk = words.splice(0, 10).join(' ');
-                    
-                    // Ensure the chunk ends with a punctuation if it's not the last chunk
-                    if (words.length > 0 && !chunk.match(/[\.!\?]$/)) {
-                        chunk += '.';
-                    }
-        
-                    if (chunk.trim().length > 0) {
-                        const audioBase64 = await convertTextToAudio(chunk, selected_voice);
-                        // If audio conversion was successful, send it back to the client via WebSocket
-                        if (audioBase64) {
-                            io.emit(`${userName}`, { audio: audioBase64 });
-                            // Here, we add a delay to buffer the audio properly
-                            await delay(300); // Adjust the time based on the buffer length you want
-                        }
-                    }
-                }
-            });
-        }
+          await queue.add(async () => {
+              let sentence = sentences[i];
+              let words = sentence.split(' ');
+
+              while (words.length > 0) {
+                  // Take the first 40 words or the whole sentence, whichever is smaller
+                  let chunk = words.splice(0, 20).join(' ');
+
+                  // Ensure the chunk ends with punctuation if it's not the last chunk
+                  if (words.length > 0 && !chunk.match(/[\.!\?]$/)) {
+                      chunk += '.';
+                  }
+
+                  if (chunk.trim().length > 0) {
+                      const audioBase64 = await convertTextToAudio(chunk, selected_voice);
+                      // If audio conversion was successful, send it back to the client via WebSocket
+                      if (audioBase64) {
+                          io.emit(`${userName}`, { audio: audioBase64 });
+                          await delay(500)
+                      }
+                  }
+              }
+
+              // Send the chunk of text to the frontend as well
+              io.emit(`${userName}`, { text: sentence });
+          });
+      }
 
         // Send a text response back to the client as well (optional)
         res.json({ text: fullTextResponse });
@@ -268,9 +269,7 @@ app.post('/chat', async (req, res) => {
         res.status(500).json({ error: error.toString() });
     }
 });
-
 const server = http.createServer(app);
-
 const io = new Server(server, {
   path: "/chat-ws",
   cors: {
@@ -281,7 +280,6 @@ const io = new Server(server, {
     autoConnect: true,
   },
 });
-
 io.on("connection", (socket) => {
     console.log(`WebSocket:: A client connected with id: ${socket.id}`);
     console.log("A client connected.");
@@ -294,8 +292,6 @@ io.on("connection", (socket) => {
        console.log(`connect_error due to ${err.message}`);
     });
 });
-
-
 server.listen(port, () => {
     console.log(`Server is running on http://localhost:${port}`);
 });
