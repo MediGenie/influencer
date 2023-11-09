@@ -13,12 +13,12 @@ export const convertTextToAudio = async (textToConvert, voiceId) => {
     model_id: 'eleven_multilingual_v2',
     voice_settings: {
         stability: 0.7,
-        similarity_boost: 0.7,
+        similarity_boost: 0.8,
         use_speaker_boost: "True" 
     },
   };
 
-  const response = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${voiceId}/stream?optimize_streaming_latency=2`, {
+  const response = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${voiceId}/stream?optimize_streaming_latency=1`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
