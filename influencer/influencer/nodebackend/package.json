@@ -2,7 +2,9 @@
   "name": "influencerbackend",
   "version": "1.0.0",
   "nodemonConfig": {
-    "ignore": ["chatHistories.json"]
+    "ignore": [
+      "chatHistories.json"
+    ]
   },
   "description": "Node backend",
   "exports": "./index.js",
@@ -34,6 +36,7 @@
     "p-queue": "^7.4.1",
     "request": "^2.88.2",
     "socket.io": "^4.7.2",
+    "uuid": "^9.0.1",
     "ws": "^8.14.2"
   }
 }
