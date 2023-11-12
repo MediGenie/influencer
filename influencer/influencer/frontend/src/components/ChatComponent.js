@@ -24,7 +24,7 @@ const ChatComponent = () => {
     setAudiQueue([])
     fetchData();
 
-    const socket = io('http://127.0.0.1:5001', {
+    const socket = io('http://3.38.153.110:5000', {
       path: '/chat-ws',
       transports: ['websocket'],
       autoConnect: true,
@@ -46,7 +46,7 @@ const ChatComponent = () => {
   const fetchData = async () => {
     try {
       console.log('Fetching config data from server...');
-      const response = await fetch('http://127.0.0.1:5001/config');
+      const response = await fetch('http://3.38.153.110:5000/config');
       if (response.ok) {
         const data = await response.json();
         const voiceEntries = Object.entries(data.voices).map(([label, value]) => ({ label, value }));
@@ -141,7 +141,7 @@ const ChatComponent = () => {
         stream: shouldStream,
       };
 
-      const response = await fetch('http://127.0.0.1:5001/chat', {
+      const response = await fetch('http://3.38.153.110:5000/chat', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

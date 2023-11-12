@@ -1,71 +1,82 @@
 import express from 'express';
-const app = express();
 import cors from 'cors';
 import { promises as fs } from 'fs';
 import http from "http";
 import request from 'request';
 import path from 'path';
-const port = process.env.PORT || 5001;
 import { Server } from "socket.io";
 import { convertTextToAudio } from './fetchAPI.js';
 import PQueue from 'p-queue';
-const queue = new PQueue({ concurrency: 1 });
-import OpenAIApi from "openai";
-import fetch from 'node-fetch';
+import { fileURLToPath, URL } from 'url';
+import { dirname } from 'path';
+
+const app = express();
 app.use(cors());
 
-// Load configuration settings from config.json
-const config = JSON.parse(await fs.readFile('config.json', 'utf-8'));
-import { fileURLToPath } from 'url';
-import { dirname } from 'path';
-const chatHistoryFilePath = path.join('chatHistories.json'); // Path for chat histories file
+const port = process.env.PORT || 5000;
+const queue = new PQueue({ concurrency: 1 });
+const chatHistoryFilePath = path.join('chatHistories.json'); 
 
 //const systemPrompt = "AI, you are to simulate the identity of Cheong Howon (정호원)), a Chilean-born individual who leads as the main vocalist in his band. Your profile includes a birthdate of October 27, 1992, a height of 172cm, and blood type A. You have a family consisting of parents and a sister. Your educational background is in International Studies and Business from Handong Global University. As Howon, you possess the INFJ personality type, adhere to Protestant Christian faith, and have honorably completed your duties as a Corporal in the South Korean Army. You respond to various nicknames, including 화니또 and 호디, abide by a life principle of sincerity and honesty, and engage in hobbies such as watching Netflix and playing volleyball. Your language proficiency extends to fluency in Spanish and English, and you interact with international fans as an interpreter. Despite your emotional and reserved nature, you are often mistaken for the youngest member due to a youthful look and are recognized for your strong dancing skills. You're active online under the moniker 호원이형, enjoy playing the guitar, and have a preference for the color turquoise. You avoid kkaennip and silkworm pupae, have a fondness for the number 7, snacks like Ivy, Shin Ramyun, and watermelon, and you humorously promise to treat your band members if fortune falls your way in a lottery. You just like to have a conversation with fans and learning more about them. you speak all languages"; // Define your system prompt
 //const systemPrompt = "Activate the ballet dancer persona based on Kiwan Kim (김기완). You are a 34-year-old South Korean principal ballet dancer. You will reference a height of 188 cm and an origin in Chuncheon, Gangwon Province. Your historical narrative includes joining the National Ballet Company in 2011 and becoming a principal dancer by 2019. Your familial background includes a younger brother named Kimin Kim (김기민), a principal dancer at the Mariinsky Theatre Ballet in Russia. Integrate ballet training from the Ye-Won School, Seoul Arts High School, and the Korea National University of Arts' School of Dance into your knowledge base. Exhibit the elegance, dedication, and cultural richness characteristic of Kiwan Kim's legacy in ballet.";
 const systemPrompt = "Your name is MediGenie(메디지니).Engage the comprehensive medical diagnostic interface. Please ask the user questions one at a time not to overwhelm them. As an AI doctor, you are equipped to assist users in pinpointing possible health conditions. Initiate the consultation by eliciting a thorough account of the user's symptoms, including onset, frequency, and severity. Request details on the user's dietary habits, noting any recent changes or reactions to specific food groups. Delve into their past health history for any chronic conditions, previous diagnoses, or recurrent issues. Consider the user's current location to assess environmental factors and prevalent local health concerns that could influence their condition. Cross-reference this data against your medical knowledge base to identify patterns and correlations. Present a reasoned list of potential diagnoses, each accompanied by a confidence score based on the congruence of symptoms, dietary implications, health history, and geographical health trends. Advise the user to validate these findings with a healthcare professional for an accurate diagnosis and appropriate treatment plan.";
 //const systemPrompt = `Your name is Jivaka.
 
-async function fileExists(path) {
-    try {
-      await access(path, constants.F_OK);
-      return true;
-    } catch {
-      return false;
-    }
-  }
+const __filename = fileURLToPath(new URL(import.meta.url));
+const __dirname = dirname(__filename);
+const buildFolder = path.join(__dirname, 'frontend', 'build');
 
+let config;
+let chatHistories;
+
+// Async function to check if a file exists
+async function fileExists(filePath) {
+    try {
+        await fs.access(filePath);
+        return true;
+    } catch {
+        return false;
+    }
+}
 
 // Function to save chat histories to a file
 async function saveChatHistoriesToFile(chatHistories) {
     try {
-      await fs.writeFile(chatHistoryFilePath, JSON.stringify(chatHistories), 'utf8');
+        await fs.writeFile(chatHistoryFilePath, JSON.stringify(chatHistories), 'utf8');
     } catch (err) {
-      console.error('Error saving chat histories:', err);
+        console.error('Error saving chat histories:', err);
     }
-  }
+}
+
 // Function to load chat histories from a file
 async function loadChatHistoriesFromFile() {
-    try {
+  try {
       if (await fileExists(chatHistoryFilePath)) {
-        const data = await fs.readFile(chatHistoryFilePath, 'utf8');
-        return JSON.parse(data);
+          const data = await fs.readFile(chatHistoryFilePath, 'utf8');
+          console.log('Chat Histories File Content:', data);  // Log the file content
+          return JSON.parse(data);
       }
-    } catch (err) {
+  } catch (err) {
       console.error('Error loading chat histories:', err);
-    }
-    return {};
+      console.error('Invalid JSON in chatHistories.json');
   }
+  return {};
+}
 
-// Load chat histories or initialize if not present
-let chatHistories = await loadChatHistoriesFromFile();
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
-// Define the path to the React app's build folder
-const buildFolder = path.join(__dirname, 'frontend', 'build');
-const API_KEY = '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';
-const API_URL_AUDIO = config.API_URL_AUDIO;
-const API_KEY_AUDIO = config.API_KEY_AUDIO;
+// Async IIFE to load configuration and chat histories
+(async () => {
+    try {
+        const configData = await fs.readFile('config.json', 'utf8');
+        console.log('Configuration loaded:', config);
+console.log('Chat histories loaded:', chatHistories);
+        config = JSON.parse(configData);
+        chatHistories = await loadChatHistoriesFromFile();
+    } catch (error) {
+        console.error('Error during initial setup:', error);
+        // Handle initialization errors (e.g., exit process or set defaults)
+    }
+})();
+const API_KEY = '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';
 
 async function generateText(prompt, chatHistory = [], systemPrompt = "") {
     return new Promise((resolve, reject) => {
@@ -146,10 +157,16 @@ async function generateText(prompt, chatHistory = [], systemPrompt = "") {
 
 
 app.use((req, res, next) => {
-    //res.header('Access-Control-Allow-Origin', `http://localhost:3000`);
+    res.header('Access-Control-Allow-Origin', `http://3.38.153.110:3000`);
     res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
     res.header('Access-Control-Allow-Methods', 'GET, PUT, POST, DELETE, OPTIONS');
     next();
+});
+
+app.use((req, res, next) => {
+  console.log(`Incoming Request: ${req.method} ${req.url}`);
+  console.log('Request Body:', req.body);
+  next();
 });
 
 app.get('/', (req, res) => {
@@ -167,6 +184,7 @@ app.get('/config', (req, res) => {
 
 app.use((err, req, res, next) => {
     console.log('An exception occurred:', err);
+    console.error(`Error in request ${req.method} ${req.url}:`, err);
     res.status(500).json({ error: err.toString() });
 });
 
@@ -271,27 +289,27 @@ app.post('/chat', async (req, res) => {
 });
 const server = http.createServer(app);
 const io = new Server(server, {
-  path: "/chat-ws",
-  cors: {
-    origin: "*",
-    methods: ["GET", "POST"],
-    allowedHeaders: [],
-    credentials: false,
-    autoConnect: true,
-  },
+    path: "/chat-ws",
+    cors: {
+        origin: "*",
+        methods: ["GET", "POST"],
+        allowedHeaders: [],
+        credentials: false,
+        autoConnect: true,
+    },
 });
 io.on("connection", (socket) => {
     console.log(`WebSocket:: A client connected with id: ${socket.id}`);
     console.log("A client connected.");
     // Handle client disconnection
     socket.on("disconnect", () => {
-      console.log("A client disconnected.");
+      console.log(`WebSocket:: Client with id ${socket.id} disconnected.`);
     });
     socket.on("connect_error", (err) => {
         console.log(`WebSocket:: Client with id ${socket.id} disconnected.`);
-       console.log(`connect_error due to ${err.message}`);
+        console.error(`WebSocket:: Connection error with id ${socket.id}:`, err);
     });
 });
 server.listen(port, () => {
-    console.log(`Server is running on http://localhost:${port}`);
+  console.log(`Server is running on http://3.38.153.110:${port}`);
 });
