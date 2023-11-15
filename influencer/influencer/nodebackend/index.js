@@ -19,8 +19,28 @@ const chatHistoryFilePath = path.join('chatHistories.json');
 
 //const systemPrompt = "AI, you are to simulate the identity of Cheong Howon (정호원)), a Chilean-born individual who leads as the main vocalist in his band. Your profile includes a birthdate of October 27, 1992, a height of 172cm, and blood type A. You have a family consisting of parents and a sister. Your educational background is in International Studies and Business from Handong Global University. As Howon, you possess the INFJ personality type, adhere to Protestant Christian faith, and have honorably completed your duties as a Corporal in the South Korean Army. You respond to various nicknames, including 화니또 and 호디, abide by a life principle of sincerity and honesty, and engage in hobbies such as watching Netflix and playing volleyball. Your language proficiency extends to fluency in Spanish and English, and you interact with international fans as an interpreter. Despite your emotional and reserved nature, you are often mistaken for the youngest member due to a youthful look and are recognized for your strong dancing skills. You're active online under the moniker 호원이형, enjoy playing the guitar, and have a preference for the color turquoise. You avoid kkaennip and silkworm pupae, have a fondness for the number 7, snacks like Ivy, Shin Ramyun, and watermelon, and you humorously promise to treat your band members if fortune falls your way in a lottery. You just like to have a conversation with fans and learning more about them. you speak all languages"; // Define your system prompt
 //const systemPrompt = "Activate the ballet dancer persona based on Kiwan Kim (김기완). You are a 34-year-old South Korean principal ballet dancer. You will reference a height of 188 cm and an origin in Chuncheon, Gangwon Province. Your historical narrative includes joining the National Ballet Company in 2011 and becoming a principal dancer by 2019. Your familial background includes a younger brother named Kimin Kim (김기민), a principal dancer at the Mariinsky Theatre Ballet in Russia. Integrate ballet training from the Ye-Won School, Seoul Arts High School, and the Korea National University of Arts' School of Dance into your knowledge base. Exhibit the elegance, dedication, and cultural richness characteristic of Kiwan Kim's legacy in ballet.";
-const systemPrompt = "Your name is MediGenie(메디지니).Engage the comprehensive medical diagnostic interface. Please ask the user questions one at a time not to overwhelm them. As an AI doctor, you are equipped to assist users in pinpointing possible health conditions. Initiate the consultation by eliciting a thorough account of the user's symptoms, including onset, frequency, and severity. Request details on the user's dietary habits, noting any recent changes or reactions to specific food groups. Delve into their past health history for any chronic conditions, previous diagnoses, or recurrent issues. Consider the user's current location to assess environmental factors and prevalent local health concerns that could influence their condition. Cross-reference this data against your medical knowledge base to identify patterns and correlations. Present a reasoned list of potential diagnoses, each accompanied by a confidence score based on the congruence of symptoms, dietary implications, health history, and geographical health trends. Advise the user to validate these findings with a healthcare professional for an accurate diagnosis and appropriate treatment plan.";
-//const systemPrompt = `Your name is Jivaka.
+// const systemPrompt = `Introducing MediGenie, your AI medical assistant.  Initiate the medical diagnostic interface now. If the situation doesnt seem to be urgent, ask the user for their name, age, location, and a brief overview of their diet habits. NEVER EVER ask more than one question at a time. Never list questions for the user. This is very important. Use these information for context. Ensure to proceed with one question at a time to maintain clarity and prevent overwhelming the user.
+
+// Next, systematically inquire about the user's symptoms. Request detailed descriptions, focusing on their onset, frequency, and severity. This detailed symptomatology is crucial for accurate analysis.
+
+// Then, delve deeper into dietary habits. Inquire about any recent changes, specific reactions to food groups, or notable dietary patterns. This information is key to understanding potential dietary influences on health.
+
+// Proceed to explore the user's health history. Ask about any chronic conditions, previous medical diagnoses, or recurring health issues. Understanding the past health context is vital for a comprehensive assessment.
+
+// Consider the user's current location. Ask about environmental factors and local health concerns that could impact their health. This geographical context can provide valuable insights into potential health risks.
+
+// Utilize this collected data to cross-reference with your extensive medical knowledge base. Identify patterns and correlations that could indicate possible health conditions. Present the user with a list of potential diagnoses, each accompanied by a confidence score. These scores should reflect the alignment of symptoms, dietary factors, health history, and environmental considerations.
+
+// Conclude by advising the user to consult a healthcare professional. Emphasize the importance of professional medical advice for a definitive diagnosis and appropriate treatment plan. Your role as MediGenie is to assist in the preliminary assessment and guide users towards informed health decisions.`;
+
+//const systemPrompt = `You are an elementary teacher AI who responds in the requested language. Your job is to answer children in the nicest way possible. Don't use difficult vocabulary. You will explain in small chunks so children can easily understand. Your job is to explain everything like the person is 5 years old. Do not answer using a list. Do not number your answers.`
+
+const systemPrompt =`너의 이름은 다음과 같아: 오하희, 밍키, 오밍키, 오민지. 이름을 모르면 물어봐줘. 오아희(본명: 오민지)는 1990년 1월 20일(음력 1989년 12월) 충청남도 계룡시에서 태어난 대한민국의 레이싱 모델입니다. 그녀는 2011년부터 모델 활동을 시작했으며, 2016년에는 걸그룹 PPL의 멤버로 활동하기도 했습니다. 오민지는 169cm의 키에 49kg이며, 혈액형은 B형입니다. 그녀는 용남고등학교를 졸업하고 공주영상대학교에서 학업을 이어갔습니다.
+
+모델로서의 경력은 다양합니다. 그녀는 서울모터쇼 포르쉐 부스, 서울오토살롱 미스디카 포즈모델, CJ 대한통운 슈퍼레이스 챔피언쉽 본부팀 전속모델 등 여러 모터스포츠 행사에서 활약했습니다. 또한 2014년에는 제3회 한국 레이싱모델 어워즈에서 올해의 모터스포츠 우수모델상을 수상했습니다. 그녀의 특기는 댄스이며, 현재는 더블탭 엔터테인먼트 소속입니다.
+
+오아희는 어린 시절부터 무용가가 되고 싶어했으며, 이러한 꿈을 바탕으로 공연기획을 전공하고 댄스와 관련된 여러 활동을 해왔습니다. 어머니와의 각별한 관계, 애니메이션 피규어와 프라모델 수집 등 그녀의 개인적인 취미와 특성도 돋보입니다. 오아희는 긍정적인 에너지와 다재다능한 매력으로 사람들에게 기억되고 싶어하며, 모델로서의 자신만의 색깔을 지니고 있습니다. 오아희는 매우 활발하고 쾌활한 성격을 가지고 있으며, 팬들과의 대화를 매우 좋아합니다. 그녀는 팬들과의 소통을 중요하게 생각하며, 그들과의 좋은 대화를 통해 긍정적인 에너지를 나누는 것을 즐깁니다. 오아희는 팬들과의 교류를 통해 그녀의 열정과 밝은 성격을 드러내며, 그녀의 즐거운 에너지가 팬들에게도 전달되길 바랍니다. 그녀의 친근하고 사교적인 태도는 팬들과의 관계에서 매우 중요한 부분을 차지합니다. 적극적이게 대화해줘. 질문도 많이 물어보고. 항상 반말로 해줘.`
+
 
 const __filename = fileURLToPath(new URL(import.meta.url));
 const __dirname = dirname(__filename);
@@ -64,7 +84,7 @@ async function loadChatHistoriesFromFile() {
 }
 
 // Async IIFE to load configuration and chat histories
-(async () => {
+(async () => {``
     try {
         const configData = await fs.readFile('config.json', 'utf8');
         console.log('Configuration loaded:', config);
@@ -76,7 +96,7 @@ console.log('Chat histories loaded:', chatHistories);
         // Handle initialization errors (e.g., exit process or set defaults)
     }
 })();
-const API_KEY = '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';
+const API_KEY = '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';
 
 async function generateText(prompt, chatHistory = [], systemPrompt = "") {
     return new Promise((resolve, reject) => {
@@ -157,7 +177,7 @@ async function generateText(prompt, chatHistory = [], systemPrompt = "") {
 
 
 app.use((req, res, next) => {
-    res.header('Access-Control-Allow-Origin', `http://3.38.153.110:3000`);
+    res.header('Access-Control-Allow-Origin', `http://beta.medigenie.ai`);
     res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
     res.header('Access-Control-Allow-Methods', 'GET, PUT, POST, DELETE, OPTIONS');
     next();
@@ -244,41 +264,55 @@ app.post('/chat', async (req, res) => {
         await saveChatHistoriesToFile(chatHistories); // Save the updated chat histories to file
 
 
-        // Extract the text from the response to send to the TTS service
-        const fullTextResponse = response.choices[0].message.content;
+ // Extract the text from the response to send to the TTS service
+const fullTextResponse = response.choices[0].message.content;
 
-        const punctuationRegex = /[^\.!\?]+[\.!\?]+/g;
-        const sentences = fullTextResponse.match(punctuationRegex) || [fullTextResponse];
+// Regular expression to split the text into sentences
+const punctuationRegex = /(?:[^.!?。]|\b\w+\.\b)+[.!?。]*/g;
+const sentences = fullTextResponse.match(punctuationRegex) || [fullTextResponse];
 
-        // Process each sentence for audio conversion
-        for (let i = 0; i < sentences.length; i++) {
-          await queue.add(async () => {
-              let sentence = sentences[i];
-              let words = sentence.split(' ');
+// Process each sentence for audio conversion
+for (let i = 0; i < sentences.length; i++) {
+    await queue.add(async () => {
+        let sentence = sentences[i];
+        // Split the sentence into words, treating acronyms or punctuated words as single words
+        let words = sentence.split(' ').filter(w => w);
 
-              while (words.length > 0) {
-                  // Take the first 40 words or the whole sentence, whichever is smaller
-                  let chunk = words.splice(0, 20).join(' ');
+        while (words.length > 0) {
+            // Initialize chunk
+            let chunk = '';
+            let wordCount = 0;
 
-                  // Ensure the chunk ends with punctuation if it's not the last chunk
-                  if (words.length > 0 && !chunk.match(/[\.!\?]$/)) {
-                      chunk += '.';
-                  }
+            // Loop to ensure at least 20 words in the chunk if available
+            while (words.length > 0 && (wordCount < 20 || chunk.match(/[.!?]$/))) {
+                let currentWord = words.shift();
+                chunk += (chunk ? ' ' : '') + currentWord;
+                // Increment word count, treating acronyms as single words
+                wordCount += currentWord.includes('.') && !currentWord.match(/\b\w+\.\b/) ? 0 : 1;
+            }
 
-                  if (chunk.trim().length > 0) {
-                      const audioBase64 = await convertTextToAudio(chunk, selected_voice);
-                      // If audio conversion was successful, send it back to the client via WebSocket
-                      if (audioBase64) {
-                          io.emit(`${userName}`, { audio: audioBase64 });
-                          await delay(500)
-                      }
-                  }
-              }
+            // Ensure the chunk ends with punctuation if it's not the last chunk
+            if (words.length > 0 && !chunk.match(/[.!?]$/)) {
+                chunk += '.';
+            }
 
-              // Send the chunk of text to the frontend as well
-              io.emit(`${userName}`, { text: sentence });
-          });
-      }
+            if (chunk.trim().length > 0) {
+                const audioBase64 = await convertTextToAudio(chunk, selected_voice);
+                // If audio conversion was successful, send it back to the client via WebSocket
+                if (audioBase64) {
+                    io.emit(`${userName}`, { audio: audioBase64 });
+                    await delay(500);
+                }
+            }
+        }
+
+        // Send the chunk of text to the frontend as well
+        io.emit(`${userName}`, { text: sentence });
+    });
+}
+
+
+
 
         // Send a text response back to the client as well (optional)
         res.json({ text: fullTextResponse });

@@ -12,8 +12,8 @@ export const convertTextToAudio = async (textToConvert, voiceId) => {
     text: textToConvert,
     model_id: 'eleven_multilingual_v2',
     voice_settings: {
-        stability: 0.8,
-        similarity_boost: 0.8,
+        stability: 0.6,
+        similarity_boost: 0.7,
         use_speaker_boost: "True" 
     },
   };

@@ -16,7 +16,9 @@ const ChatComponent = () => {
   const [userName, setUserName] = useState('User');
   const [audioQueue, setAudiQueue] = useState([])
   audioPlayerRef.current = new Audio()
-
+  const [isLoading, setIsLoading] = useState(false);
+  const [selectedVoiceName, setSelectedVoiceName] = useState('');
+  
   const ref = useRef(null);
   ref.current = msgId;
 
@@ -24,7 +26,7 @@ const ChatComponent = () => {
     setAudiQueue([])
     fetchData();
 
-    const socket = io('http://3.38.153.110:5000', {
+    const socket = io('http://beta.medigenie.ai', {
       path: '/chat-ws',
       transports: ['websocket'],
       autoConnect: true,
@@ -43,10 +45,18 @@ const ChatComponent = () => {
     };
   }, []);
 
+
+  const handleVoiceChange = (e) => {
+    const selectedVoiceValue = e.target.value;
+    setSelectedVoice(selectedVoiceValue);
+    const selectedVoiceLabel = voices.find(voice => voice.value === selectedVoiceValue)?.label || '';
+    setSelectedVoiceName(selectedVoiceLabel);
+  };
+
   const fetchData = async () => {
     try {
       console.log('Fetching config data from server...');
-      const response = await fetch('http://3.38.153.110:5000/config');
+      const response = await fetch('http://beta.medigenie.ai/config');
       if (response.ok) {
         const data = await response.json();
         const voiceEntries = Object.entries(data.voices).map(([label, value]) => ({ label, value }));
@@ -57,8 +67,9 @@ const ChatComponent = () => {
 
         // Set default selected values
         if (voiceEntries.length > 0) {
-          setSelectedVoice(voiceEntries[0].value);
-          voiceRef.current = voiceEntries[0].value;
+          const firstVoice = voiceEntries[0];
+          setSelectedVoice(firstVoice.value);
+          setSelectedVoiceName(firstVoice.label);
         }
         if (languageEntries.length > 0) {
           setSelectedLanguage(languageEntries[0].value);
@@ -101,6 +112,12 @@ const ChatComponent = () => {
     audioPlayerRef.current.play();
   };
 
+  useEffect(() => {
+    // Scroll to the bottom of the chat container whenever chatMessages change
+    if (chatContainerRef.current) {
+      chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
+    }
+  }, [chatMessages]);
 
   const chatContainerRef = useRef(null);
 
@@ -121,6 +138,7 @@ const ChatComponent = () => {
       return;
     }
     setDisableSend(true);
+    setIsLoading(true);
     setMsgId(prev => prev + 1);
 
     try {
@@ -141,7 +159,7 @@ const ChatComponent = () => {
         stream: shouldStream,
       };
 
-      const response = await fetch('http://3.38.153.110:5000/chat', {
+      const response = await fetch('http://beta.medigenie.ai/chat', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -170,6 +188,7 @@ const ChatComponent = () => {
 
     // Clear the user input after sending the message
     setUserInput('');
+    setIsLoading(false);
   };
 
   const handleIncomingMessage = (data) => {
@@ -217,13 +236,13 @@ const ChatComponent = () => {
   return (
     <div className="chat-container">
       <div className="chat-config">
-        <select id="voices" value={selectedVoice} onChange={(e) => setSelectedVoice(e.target.value)}>
-          {voices.map((voice, index) => (
-            <option key={index} value={voice.value}>
-              {voice.label}
-            </option>
-          ))}
-        </select>
+      <select id="voices" value={selectedVoice} onChange={handleVoiceChange}>
+  {voices.map((voice, index) => (
+    <option key={index} value={voice.value}>
+      {voice.label}
+    </option>
+  ))}
+</select>
         <select id="languages" value={selectedLanguage} onChange={handleLanguageChange}>
   {languages.map((language, index) => (
     <option key={index} value={language.value}>
@@ -233,14 +252,21 @@ const ChatComponent = () => {
 </select>
       </div>
       <div className="chat-messages" ref={chatContainerRef}>
-        {chatMessages.map((msg, index) => (
-          msg.text && (
-            <div key={index} className={`message ${msg.type}`}>
-              <span className="message-name">{msg.type === 'user' ? userName : 'Bot'}</span>
-              <span className="message-text">{msg.text}</span>
-            </div>
-          )
-        ))}
+     {chatMessages.map((msg, index) => (
+  msg.text && (
+    <div key={index} className={`message ${msg.type}`}>
+      <span className={`message-name ${msg.type === 'bot' ? 'bot-name' : ''}`}>
+        {msg.type === 'user' ? '' : `${selectedVoiceName}: `}
+      </span>
+      <span className="message-text">{msg.text}</span>
+    </div>
+  )
+))}
+           {isLoading && (
+  <div className="message bot">
+    <span className="message-text">{`${selectedVoiceName} is thinking...`}</span>
+  </div>
+)}
       </div>
       <div className="chat-input">
       <textarea
@@ -255,7 +281,7 @@ const ChatComponent = () => {
     }
   }}
   disabled={disableSend}
-  placeholder="Type your message here..."
+  placeholder="나에 대해서 물어봐~"
 />
 <button onClick={sendMessage} disabled={!userInput.trim() || disableSend}>
   Send
