@@ -94,7 +94,7 @@ console.log('Chat histories loaded:', chatHistories);
         // Handle initialization errors (e.g., exit process or set defaults)
     }
 })();
-const API_KEY = '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';
+const API_KEY = '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';
 
 async function generateText(prompt, chatHistory = [], systemPrompt = "") {
     return new Promise((resolve, reject) => {
